@@ -1,0 +1,34 @@
+{
+    "name": "wolfgangvc/tato",
+    "description": "A potato cms",
+    "authors": [
+        {
+            "name": "WolfGang",
+            "email": "wolfgang@voncaron.co.uk"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.4",
+        "raveren/kint": "^1.0",
+        "zeuxisoo/slim-whoops": "^0.5.1",
+        "slim/twig-view": "^2.1",
+        "twig/extensions": "^1.3",
+        "twbs/bootstrap": "^3.3"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "dev-master",
+        "friendsofphp/php-cs-fixer": "^2.0@dev",
+        "fzaninotto/Faker": "dev-master",
+        "phpunit/phpunit": "5.*"
+    },
+    "autoload":{
+        "psr-4":{
+            "Tato\\":"src"
+        }
+    },
+    "autoload-dev":{
+        "psr-4":{
+            "Tato\\Test\\":"tests/"
+        }
+    }
+}
