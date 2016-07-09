@@ -17,7 +17,7 @@ class Tato
     protected $slim;
     /** @var \Interop\Container\ContainerInterface */
     protected $container;
-    public static function Factory()
+    public static function factory()
     {
         return new self();
     }
