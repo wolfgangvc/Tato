@@ -6,7 +6,7 @@
 
 {% block content %}
     {%  include 'posts/post.html.twig' %}
-    <a href="/posts/edit/{{ post.post_id }}">Edit Post</a>
+    <a href="/post/edit/{{ post.post_id }}">Edit Post</a>
     <hr/>
     <div class="well">
         {% include "comments/edit.html.twig" %}

@@ -20,4 +20,9 @@ class PostService
         $first = ($first < 0) ? 0 : $first;
         return Post::search()->limit($count, $first)->exec();
     }
+
+    public function getPostCount()
+    {
+        return Post::search()->count();
+    }
 }
