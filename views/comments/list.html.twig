@@ -1,0 +1,8 @@
+{% if comments %}
+    {% for comment in comments %}
+        {% include "comments/comment.html.twig" %}
+        <hr/>
+    {% endfor %}
+{% else %}
+    <p>Nothing to see here mate!</p>
+{% endif %}

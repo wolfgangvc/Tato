@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    TATO NEW POST
+{% endblock %}
+
+{% block content %}
+    <div>
+        <form action="" method="post">
+            <div class="form-group">
+                <label for="title">Post Title</label>
+                <input name="title" type="text" class="form-control" id="title" value="{{ post.title }}"
+                       placeholder="Enter post title here ...">
+            </div>
+            <div class="form-group">
+                <label for="body">Post Body</label>
+                <textarea name="body" class="form-control" id="body"
+                          placeholder="Enter post body here ...">{{ post.body }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    TATO POST NAME : {{ post.title }}
+{% endblock %}
+
+{% block content %}
+    {%  include 'posts/post.html.twig' %}
+    <hr/>
+    <div class="well">
+        {% include "comments/list.html.twig" %}
+    </div>
+{% endblock %}
