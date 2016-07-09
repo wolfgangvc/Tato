@@ -1,9 +1,9 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-TATO HOME
+    TATO HOME
 {% endblock %}
 
 {% block content %}
-{{ rand }} tatos in here or something
+    {% include "posts/list.html.twig" %}
 {% endblock %}
