@@ -31,6 +31,7 @@ class PostController
             return $response->withStatus(404, "POST NOT FOUND");
         }
         $comments = $this->commentService->getByPostID($post->post_id);
+        
         return $this->twig
             ->render(
                 $response,

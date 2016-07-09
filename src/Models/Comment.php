@@ -23,4 +23,12 @@ class Comment extends ActiveRecord
     public $body;
     public $created;
     public $deleted = "no";
+
+    public function save($automatic_reload = true)
+    {
+        if(!$this->created) {
+            $this->created = date("Y-m-d H:i:s");
+        }
+        parent::save($automatic_reload);
+    }
 }

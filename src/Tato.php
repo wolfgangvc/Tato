@@ -4,6 +4,7 @@ namespace Tato;
 use Slim\App as SlimApp;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Tato\Controllers\CommentController;
 use Tato\Controllers\HomeController;
 use Tato\Controllers\PostController;
 use Tato\Services\CommentService;
@@ -66,6 +67,12 @@ class Tato
                 $container->get(CommentService::class)
             );
         };
+        $this->container[CommentController::class] = function (\Slim\Container $container) {
+            return new CommentController(
+                $container->get("view"),
+                $container->get(CommentService::class)
+            );
+        };
         $this->container[PostService::class] = function (\Slim\Container $container) {
             return new PostService();
         };
@@ -115,9 +122,16 @@ class Tato
         $this->slim->group("/posts", function (){
             $this->get("/new", PostController::class . ':showNewPost');
             $this->post("/new", PostController::class . ':doNewPost');
-            $this->get("/edit/{id}", PostController::class . ':showEditPost');
-            $this->post("/edit/{id}", PostController::class . ':doEditPost');
+            $this->group("/edit", function(){
+                $this->get("/{id}", PostController::class . ':showEditPost');
+                $this->post("/{id}", PostController::class . ':doEditPost');
+            });
             $this->get("/{id}", PostController::class . ':showPost');
+        });
+        $this->slim->group("/comments",function(){
+            $this->get("/edit/{id}", CommentController::class . ":showEditComment");
+            $this->post("/edit", CommentController::class . ":doEditComment");
+            $this->post("/delete/{id}",CommentController::class . ":doDeleteComment");
         });
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');
