@@ -112,13 +112,12 @@ class Tato
             return $response;
         });
         $this->slim->get("/", HomeController::class . ':showHomePage');
-        $slim = $this->slim;
-        $this->slim->group("/posts", function () use ($slim) {
-            $slim->get("/new", PostController::class . ':showNewPost');
-            $slim->post("/new", PostController::class . ':doNewPost');
-            $slim->get("/edit/{id}", PostController::class . ':showEditPost');
-            $slim->post("/edit/{id}", PostController::class . ':doEditPost');
-            $slim->get("/{id}", PostController::class . ':showPost');
+        $this->slim->group("/posts", function (){
+            $this->get("/new", PostController::class . ':showNewPost');
+            $this->post("/new", PostController::class . ':doNewPost');
+            $this->get("/edit/{id}", PostController::class . ':showEditPost');
+            $this->post("/edit/{id}", PostController::class . ':doEditPost');
+            $this->get("/{id}", PostController::class . ':showPost');
         });
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');
