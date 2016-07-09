@@ -1,0 +1,17 @@
+<div>
+    <form action="/comment/edit" method="post">
+        <div class="form-group">
+            <label for="title">Comment Title</label>
+            <input name="title" type="text" class="form-control" id="title" value="{{ comment.title }}"
+                   placeholder="Enter comment title here ...">
+        </div>
+        <div class="form-group">
+            <label for="body">Comment Body</label>
+            <textarea name="body" class="form-control" id="body"
+                      placeholder="Enter comment body here ...">{{ comment.body }}</textarea>
+        </div>
+        <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
+        <input type="hidden" name="post_id" value="{{ post.post_id }}">
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+</div>

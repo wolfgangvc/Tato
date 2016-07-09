@@ -8,6 +8,9 @@
     {%  include 'posts/post.html.twig' %}
     <hr/>
     <div class="well">
+        {% include "comments/edit.html.twig" %}
+    </div>
+    <div class="well">
         {% include "comments/list.html.twig" %}
     </div>
 {% endblock %}
