@@ -1,0 +1,17 @@
+language: php
+
+php:
+  - 7.0
+
+before_script :
+  - composer install
+  - mysql -e 'create database tato;'
+  - mysql -e "use mysql; SET PASSWORD FOR 'travis'@'localhost' = PASSWORD('travis'); FLUSH PRIVILEGES;"
+
+script:
+  - ./vendor/bin/phpcs --warning-severity=6 --standard=PSR2 *.php src tests
+  - phpunit -c phpunit.travis.xml.dist
+
+notifications:
+  email:
+    - wolfgang@voncaron.co.uk

@@ -26,7 +26,7 @@ class Comment extends ActiveRecord
 
     public function save($automatic_reload = true)
     {
-        if(!$this->created) {
+        if (!$this->created) {
             $this->created = date("Y-m-d H:i:s");
         }
         parent::save($automatic_reload);

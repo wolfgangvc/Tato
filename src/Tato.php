@@ -119,19 +119,19 @@ class Tato
             return $response;
         });
         $this->slim->get("/", HomeController::class . ':showHomePage');
-        $this->slim->group("/posts", function (){
+        $this->slim->group("/posts", function () {
             $this->get("/new", PostController::class . ':showNewPost');
             $this->post("/new", PostController::class . ':doNewPost');
-            $this->group("/edit", function(){
+            $this->group("/edit", function () {
                 $this->get("/{id}", PostController::class . ':showEditPost');
                 $this->post("/{id}", PostController::class . ':doEditPost');
             });
             $this->get("/{id}", PostController::class . ':showPost');
         });
-        $this->slim->group("/comments",function(){
+        $this->slim->group("/comments", function () {
             $this->get("/edit/{id}", CommentController::class . ":showEditComment");
             $this->post("/edit", CommentController::class . ":doEditComment");
-            $this->post("/delete/{id}",CommentController::class . ":doDeleteComment");
+            $this->post("/delete/{id}", CommentController::class . ":doDeleteComment");
         });
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');
