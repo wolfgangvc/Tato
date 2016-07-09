@@ -1,0 +1,37 @@
+haproxy:
+  environment: 
+    - "STATS_AUTH=stats:CaptainMorgan"
+    - "TIMEOUT=connect 50000, client 500000, server 500000"
+  image: "tutum/haproxy:latest"
+  links: 
+    - tato
+    - phpmyadmin
+  ports: 
+    - "80:80"
+    - "1936:1936"
+
+mysql: 
+  environment: 
+    - MYSQL_ROOT_PASSWORD=0Z0mQ130F65E8wD
+    - MYSQL_USER=tatouser
+    - MYSQL_PASSWORD=5zkfAr9Y8k6qosP
+    - MYSQL_DATABASE=tatodbs
+  image: mysql
+  ports: 
+    - "3306"
+
+phpmyadmin: 
+  environment: 
+    - VIRTUAL_HOST=mysql.tato.dev
+  image: "corbinu/docker-phpmyadmin:latest"
+  links: 
+    - mysql
+
+tato: 
+  build: "."
+  environment: 
+    - VIRTUAL_HOST=tato.dev
+  links: 
+    - mysql
+  volumes: 
+    - "./:/app"
