@@ -5,6 +5,9 @@ use Slim\App as SlimApp;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Tato\Controllers\HomeController;
+use Tato\Controllers\PostController;
+use Tato\Services\CommentService;
+use Tato\Services\PostService;
 use Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware;
 
 class Tato
@@ -51,7 +54,23 @@ class Tato
     protected function setupDependencies()
     {
         $this->container[HomeController::class] = function (\Slim\Container $container) {
-            return new HomeController($container);
+            return new HomeController(
+                $container->get("view"),
+                $container->get(PostService::class)
+            );
+        };
+        $this->container[PostController::class] = function (\Slim\Container $container) {
+            return new PostController(
+                $container->get("view"),
+                $container->get(PostService::class),
+                $container->get(CommentService::class)
+            );
+        };
+        $this->container[PostService::class] = function (\Slim\Container $container) {
+            return new PostService();
+        };
+        $this->container[CommentService::class] = function (\Slim\Container $container) {
+            return new CommentService();
         };
     }
 
@@ -92,7 +111,20 @@ class Tato
             $response->write("Hello " . $args['name']);
             return $response;
         });
-        $this->slim->get("/", \Tato\Controllers\HomeController::class . ':showHomePage');
+        $this->slim->get("/", HomeController::class . ':showHomePage');
+        $slim = $this->slim;
+        $this->slim->group("/posts", function () use ($slim) {
+            $slim->get("/new", PostController::class . ':showNewPost');
+            $slim->post("/new", PostController::class . ':doNewPost');
+            $slim->get("/edit/{id}", PostController::class . ':showEditPost');
+            $slim->post("/edit/{id}", PostController::class . ':doEditPost');
+            $slim->get("/{id}", PostController::class . ':showPost');
+        });
+        /*
+        $this->slim->get("/posts/new",PostController::class . ':showNewPost');
+        $this->slim->post("/posts/new",PostController::class . ':doNewPost');
+        $this->slim->get("/posts/{id}",PostController::class . ':showPost');
+        */
     }
 
     public function run()

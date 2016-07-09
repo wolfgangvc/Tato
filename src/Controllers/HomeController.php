@@ -1,29 +1,34 @@
 <?php
 namespace Tato\Controllers;
 
-use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Views\Twig;
+use Tato\Services\PostService;
 
 class HomeController
 {
-    /** @var \Interop\Container\ContainerInterface */
-    protected $container;
+    /** @var Twig  */
+    protected $twig;
 
-    public function __construct(Container $container)
+    /** @var PostService  */
+    protected $postService;
+
+    public function __construct(Twig $twig, PostService $postService)
     {
-        $this->container = $container;
+        $this->twig = $twig;
+        $this->postService = $postService;
     }
 
     public function showHomePage(Request $request, Response $response, $args)
     {
-        return $this->container
-            ->get('view')
+        $posts = $this->postService->getPosts(10, 0);
+        return $this->twig
             ->render(
                 $response,
-                'dashboard/home.html.twig',
+                'home/home.html.twig',
                 [
-                    "rand" => rand(1, 10)
+                    "posts" => $posts
                 ]
             );
     }
