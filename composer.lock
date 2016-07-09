@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c0ed82adf849628e22f88fef2ab990e2",
-    "content-hash": "11db69ecf9d5ff2c32e1b7de04140982",
+    "hash": "eddd7428d56e542006d02aece1957c06",
+    "content-hash": "1560e4008d1d87d1742dafeff21a43d7",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -402,6 +402,131 @@
                 "view"
             ],
             "time": "2016-03-13 20:58:41"
+        },
+        {
+            "name": "thru.io/active_record",
+            "version": "0.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Thruio/ActiveRecord.git",
+                "reference": "e6da969efb24caa2678e35daed678bd98f726946"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Thruio/ActiveRecord/zipball/e6da969efb24caa2678e35daed678bd98f726946",
+                "reference": "e6da969efb24caa2678e35daed678bd98f726946",
+                "shasum": ""
+            },
+            "require": {
+                "thru.io/json-pretty-printer": "1.0.*",
+                "thru.io/uuid": ">=2.0"
+            },
+            "require-dev": {
+                "brianium/paratest": "dev-master",
+                "codeclimate/php-test-reporter": "dev-master",
+                "doctrine/cache": "~1.4",
+                "fiunchinho/phpunit-randomizer": "dev-master",
+                "fzaninotto/faker": "1.5.*@dev",
+                "johnkary/phpunit-speedtrap": "~1.0@dev",
+                "lstrojny/phpunit-clever-and-smart": "0.*",
+                "monolog/monolog": ">=1.6.0",
+                "phpunit/phpunit": ">=4.7",
+                "raveren/kint": "dev-master",
+                "squizlabs/php_codesniffer": "*"
+            },
+            "suggest": {
+                "doctrine/cache": "For caching, we need Doctrine/Cache"
+            },
+            "bin": [
+                "ar_benchmark"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Thru\\ActiveRecord\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Matthew Baggett",
+                    "email": "matthew@baggett.me"
+                }
+            ],
+            "description": "An active-record like implementation",
+            "time": "2016-03-15 22:33:49"
+        },
+        {
+            "name": "thru.io/json-pretty-printer",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Thruio/JsonPrettyPrinter.git",
+                "reference": "44f00ec368590c184faccbdbb395caa2aa6b080b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Thruio/JsonPrettyPrinter/zipball/44f00ec368590c184faccbdbb395caa2aa6b080b",
+                "reference": "44f00ec368590c184faccbdbb395caa2aa6b080b",
+                "shasum": ""
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Thru\\JsonPrettyPrinter\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL V2"
+            ],
+            "authors": [
+                {
+                    "name": "Matthew Baggett",
+                    "email": "matthew@baggett.me"
+                }
+            ],
+            "description": "A simple, well-tested JSON pretty printer and related stuff",
+            "time": "2015-02-18 10:41:12"
+        },
+        {
+            "name": "thru.io/uuid",
+            "version": "v2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Thruio/UUID.git",
+                "reference": "52bc1762ba7976eb0fe0ac3dfe1f390af6b66f99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Thruio/UUID/zipball/52bc1762ba7976eb0fe0ac3dfe1f390af6b66f99",
+                "reference": "52bc1762ba7976eb0fe0ac3dfe1f390af6b66f99",
+                "shasum": ""
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "*",
+                "squizlabs/php_codesniffer": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Thru\\UUID\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Matthew Baggett",
+                    "email": "matthew@baggett.me"
+                }
+            ],
+            "description": "A nice little library to interact with UUIDs",
+            "time": "2016-01-14 15:59:00"
         },
         {
             "name": "twbs/bootstrap",
