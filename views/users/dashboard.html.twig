@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    TATO USER DASHBOARD : {{ user.name }}
+{% endblock %}
+
+{% block content %}
+    <p>User_ID : {{ user.user_id }}</p>
+    <p>Username : {{ user.name }}</p>
+{% endblock %}

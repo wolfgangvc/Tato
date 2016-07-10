@@ -28,7 +28,8 @@ class HomeController
                 $response,
                 'home/home.html.twig',
                 [
-                    "post" => $post
+                    "post" => $post,
+                    "user" => $_SESSION["user"]
                 ]
             );
     }

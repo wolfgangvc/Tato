@@ -157,6 +157,7 @@ class Tato
             $this->post("/login", UserController::class . ":doLogin");
             $this->get("/register", UserController::class . ":showRegister");
             $this->post("/register", UserController::class . ":doRegister");
+            $this->get("/dashboard", UserController::class . ":showDashboard");
         });
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');

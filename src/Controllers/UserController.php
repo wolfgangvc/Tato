@@ -13,6 +13,8 @@ class UserController
     /** @var UserService  */
     protected $userService;
 
+    protected $error;
+
     public function __construct(Twig $twig, UserService $userService)
     {
         $this->twig = $twig;
@@ -25,7 +27,9 @@ class UserController
             ->render(
                 $response,
                 'users/login.html.twig',
-                []
+                [
+                    "error" => $this->error
+                ]
             );
     }
 
@@ -34,11 +38,15 @@ class UserController
         $email = $request->getParam("email");
         $password = $request->getParam("password");
 
-        if (strlen($password < 6) || strlen($email) < 3) {
+        if (strlen($password) < 6 || strlen($email) < 3) {
+            $this->error = "pass/email too short";
             return $this->showLogin($request, $response, $args);
         }
         if ($this->userService->loginUser($email, $password)) {
-            $response->withRedirect("/");
+            return $response->withRedirect("/user/dashboard");
+        } else {
+            $this->error = "login FAIL";
+            return $this->showLogin($request, $response, $args);
         }
     }
 
@@ -52,6 +60,18 @@ class UserController
             );
     }
 
+    public function showDashboard(Request $request, Response $response, $args)
+    {
+        return $this->twig
+            ->render(
+                $response,
+                'users/dashboard.html.twig',
+                [
+                    "user" => $_SESSION["user"]
+                ]
+            );
+    }
+
     public function doRegister(Request $request, Response $response, $args)
     {
         $email = $request->getParam("email");
@@ -60,7 +80,7 @@ class UserController
         $password2 = $request->getParam("password2");
         if ($password == $password2) {
             if ($this->userService->newUser($email, $username, $password, $username)) {
-                return $this->showLogin($request, $response, $args);
+                return $response->withRedirect("/user/login");
             }
         }
         return $this->showRegister($request, $response, $args);
