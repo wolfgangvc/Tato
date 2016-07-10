@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eddd7428d56e542006d02aece1957c06",
-    "content-hash": "1560e4008d1d87d1742dafeff21a43d7",
+    "hash": "ba112a0d0eb58271fbd3bfee92b6b1c2",
+    "content-hash": "49b65e9ff6bcb4757cdfa61e51ada9fe",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -93,6 +93,47 @@
                 "zf2"
             ],
             "time": "2016-04-07 06:16:25"
+        },
+        {
+            "name": "hackzilla/password-generator",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hackzilla/password-generator.git",
+                "reference": "1902e0d0755552a86df67578bd9f72ea931b22f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hackzilla/password-generator/zipball/1902e0d0755552a86df67578bd9f72ea931b22f9",
+                "reference": "1902e0d0755552a86df67578bd9f72ea931b22f9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "dev-master|^1.0",
+                "sllh/php-cs-fixer-styleci-bridge": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Hackzilla\\PasswordGenerator\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Platt",
+                    "email": "github@ofdan.co.uk",
+                    "homepage": "http://www.hackzilla.org"
+                }
+            ],
+            "description": "Password Generator Library",
+            "time": "2016-05-06 21:21:29"
         },
         {
             "name": "nikic/fast-route",
