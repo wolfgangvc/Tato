@@ -155,6 +155,7 @@ class Tato
         $this->slim->group("/user", function () {
             $this->get("/login", UserController::class . ":showLogin");
             $this->post("/login", UserController::class . ":doLogin");
+            $this->get("/logout", UserController::class . ":doLogout");
             $this->get("/register", UserController::class . ":showRegister");
             $this->post("/register", UserController::class . ":doRegister");
             $this->get("/dashboard", UserController::class . ":showDashboard");

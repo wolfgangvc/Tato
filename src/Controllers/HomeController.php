@@ -23,13 +23,17 @@ class HomeController
     public function showHomePage(Request $request, Response $response, $args)
     {
         $post = $this->postService->getLatestPost();
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
         return $this->twig
             ->render(
                 $response,
                 'home/home.html.twig',
                 [
                     "post" => $post,
-                    "user" => $_SESSION["user"]
+                    "user" => $sUser
                 ]
             );
     }

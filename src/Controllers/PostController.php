@@ -31,6 +31,11 @@ class PostController
             return $response->withStatus(404, "POST NOT FOUND");
         }
         $comments = $this->commentService->getByPostID($post->post_id);
+
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
         
         return $this->twig
             ->render(
@@ -38,7 +43,8 @@ class PostController
                 'posts/view.html.twig',
                 [
                     "post" => $post,
-                    "comments" => $comments
+                    "comments" => $comments,
+                    "user" => $sUser
                 ]
             );
     }
@@ -46,12 +52,19 @@ class PostController
     public function showNewPost(Request $request, Response $response, $args)
     {
         $post = new Post();
+
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
+
         return $this->twig
             ->render(
                 $response,
                 'posts/edit.html.twig',
                 [
-                    "post" => $post
+                    "post" => $post,
+                    "user" => $sUser
                 ]
             );
     }
@@ -66,6 +79,11 @@ class PostController
 
         $posts = $this->postService->getPosts(10, $page * 10);
 
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
+
         return $this->twig
             ->render(
                 $response,
@@ -73,7 +91,8 @@ class PostController
                 [
                     "posts" => $posts,
                     "page"  => $page + 1,
-                    "pages" => ceil($this->postService->getPostCount() / 10)
+                    "pages" => ceil($this->postService->getPostCount() / 10),
+                    "user" => $sUser
                 ]
             );
     }
@@ -84,12 +103,17 @@ class PostController
         if (!$post instanceof Post) {
             return $response->withStatus(404, "POST NOT FOUND");
         }
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
         return $this->twig
             ->render(
                 $response,
                 'posts/edit.html.twig',
                 [
-                    "post" => $post
+                    "post" => $post,
+                    "user" => $sUser
                 ]
             );
     }

@@ -1,5 +1,12 @@
 {% if user %}
-
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a class="navbar-link" href="/user/dashboard">{{ user.display_name }}</a>
+        </li>
+        <li>
+            <a class="btn btn-primary" href="/user/logout">Logout</a>
+        </li>
+    </ul>
 {% else %}
 {% include "users/navbarLogin.html.twig" %}
 {% endif %}

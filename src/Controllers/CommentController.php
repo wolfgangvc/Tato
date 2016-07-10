@@ -52,12 +52,19 @@ class CommentController
         if (!$comment instanceof Comment) {
             return $response->withStatus(404, "Comment NOT FOUND");
         }
+
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
+
         return $this->twig
             ->render(
                 $response,
                 'comments/editComment.html.twig',
                 [
-                    "comment" => $comment
+                    "comment" => $comment,
+                    "user" => $sUser
                 ]
             );
     }

@@ -33,6 +33,12 @@ class UserController
             );
     }
 
+    public function doLogout(Request $request, Response $response, $args)
+    {
+        $this->userService->logoutUser();
+        return $response->withRedirect("/");
+    }
+
     public function doLogin(Request $request, Response $response, $args)
     {
         $email = $request->getParam("email");
@@ -62,12 +68,17 @@ class UserController
 
     public function showDashboard(Request $request, Response $response, $args)
     {
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
+
         return $this->twig
             ->render(
                 $response,
                 'users/dashboard.html.twig',
                 [
-                    "user" => $_SESSION["user"]
+                    "user" => $sUser
                 ]
             );
     }
