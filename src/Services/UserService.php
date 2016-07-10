@@ -36,7 +36,7 @@ class UserService
         }
 
         // Check that the user's email is not taken
-        $user = User::search()->where("user_email", $email)->execOne();
+        $user = User::search()->where("email", $email)->execOne();
         if ($user instanceof User) {
             return false;
         }
@@ -47,7 +47,7 @@ class UserService
         }
 
         // Check that username is not yet taken
-        $user = User::search()->where("user_name", $username)->execOne();
+        $user = User::search()->where("name", $username)->execOne();
         if ($user instanceof User) {
             return false;
         }
