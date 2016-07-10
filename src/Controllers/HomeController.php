@@ -22,13 +22,13 @@ class HomeController
 
     public function showHomePage(Request $request, Response $response, $args)
     {
-        $posts = $this->postService->getPosts(10, 0);
+        $post = $this->postService->getLatestPost();
         return $this->twig
             ->render(
                 $response,
                 'home/home.html.twig',
                 [
-                    "posts" => $posts
+                    "post" => $post
                 ]
             );
     }

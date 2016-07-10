@@ -119,7 +119,8 @@ class Tato
             return $response;
         });
         $this->slim->get("/", HomeController::class . ':showHomePage');
-        $this->slim->group("/posts", function () {
+        $this->slim->get("/posts/{page}", PostController::class . ":showPosts");
+        $this->slim->group("/post", function () {
             $this->get("/new", PostController::class . ':showNewPost');
             $this->post("/new", PostController::class . ':doNewPost');
             $this->group("/edit", function () {

@@ -56,8 +56,26 @@ class PostController
             );
     }
 
-    public function showPostList(Request $request, Response $response, $args)
+    public function showPosts(Request $request, Response $response, $args)
     {
+        $page = (int) $args["page"];
+        if ($page < 1) {
+            $page = 1;
+        }
+        $page--;
+
+        $posts = $this->postService->getPosts(10, $page * 10);
+
+        return $this->twig
+            ->render(
+                $response,
+                'posts/posts.html.twig',
+                [
+                    "posts" => $posts,
+                    "page"  => $page + 1,
+                    "pages" => ceil($this->postService->getPostCount() / 10)
+                ]
+            );
     }
 
     public function showEditPost(Request $request, Response $response, $args)
@@ -85,7 +103,7 @@ class PostController
         $post->title = $request->getParam("title");
         $post->body = $request->getParam("body");
         $post->save();
-        return $response->withRedirect("/posts/{$post->post_id}");
+        return $response->withRedirect("/post/{$post->post_id}");
     }
 
     public function doNewPost(Request $request, Response $response, $args)
@@ -95,6 +113,6 @@ class PostController
         $post->body = $request->getParam("body");
         $post->created = date("Y-m-d H:i:s");
         $post->save();
-        return $response->withRedirect("/posts/{$post->post_id}");
+        return $response->withRedirect("/post/{$post->post_id}");
     }
 }
