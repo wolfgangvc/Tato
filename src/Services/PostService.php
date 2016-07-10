@@ -18,7 +18,7 @@ class PostService
     {
         $count = ($count < 1) ? 1 : $count;
         $first = ($first < 0) ? 0 : $first;
-        return Post::search()->where("deleted","no")->limit($count, $first)->exec();
+        return Post::search()->where("deleted", "no")->limit($count, $first)->exec();
     }
 
     public function getPostCount()
@@ -28,6 +28,6 @@ class PostService
 
     public function getLatestPost()
     {
-        return Post::search()->order("post_id","DESC")->execOne();
+        return Post::search()->order("post_id", "DESC")->execOne();
     }
 }
