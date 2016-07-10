@@ -59,21 +59,21 @@ class PostController
     public function showPosts(Request $request, Response $response, $args)
     {
         $page = (int) $args["page"];
-        if($page < 1)$page = 1;
+        if ($page < 1) {
+            $page = 1;
+        }
         $page--;
 
-        $posts = $this->postService->getPosts(10,$page * 10);
-        if (!$posts instanceof Post) {
-            return $response->withStatus(404, "POST NOT FOUND");
-        }
-        $comments = $this->commentService->getByPostID($post->post_id);
+        $posts = $this->postService->getPosts(10, $page * 10);
 
         return $this->twig
             ->render(
                 $response,
                 'posts/posts.html.twig',
                 [
-                    "posts" => $posts
+                    "posts" => $posts,
+                    "page"  => $page + 1,
+                    "pages" => ceil($this->postService->getPostCount() / 10)
                 ]
             );
     }
