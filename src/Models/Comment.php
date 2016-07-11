@@ -8,6 +8,7 @@ use Thru\ActiveRecord\ActiveRecord;
  * @package Tato\Models
  * @var $comment_id INTEGER
  * @var $post_id INTEGER
+ * @var $user_id INTEGER
  * @var $title TEXT
  * @var $body TEXT
  * @var $created DATE
@@ -19,6 +20,7 @@ class Comment extends ActiveRecord
 
     public $comment_id;
     public $post_id;
+    public $user_id;
     public $title;
     public $body;
     public $created;

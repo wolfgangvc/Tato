@@ -37,6 +37,11 @@
                 <li>
                     <a class="navbar-link" href="/posts/1">Posts</a>
                 </li>
+                {% if user %}
+                <li>
+                    <a class="navbar-link" href="/post/new">+ Post</a>
+                </li>
+                {% endif %}
             </ul>
             {% include "users/navbarUser.html.twig" %}
         </div><!--/.navbar-collapse -->

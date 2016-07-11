@@ -51,12 +51,13 @@ class PostController
 
     public function showNewPost(Request $request, Response $response, $args)
     {
-        $post = new Post();
-
         $sUser = null;
         if (isset($_SESSION["user"])) {
             $sUser = $_SESSION["user"];
+        } else {
+            return $response->withRedirect("/");
         }
+        $post = new Post();
 
         return $this->twig
             ->render(
@@ -132,11 +133,14 @@ class PostController
 
     public function doNewPost(Request $request, Response $response, $args)
     {
-        $post = new Post();
-        $post->title = $request->getParam("title");
-        $post->body = $request->getParam("body");
-        $post->created = date("Y-m-d H:i:s");
-        $post->save();
-        return $response->withRedirect("/post/{$post->post_id}");
+        $post = $this->postService->newPost(
+            $request->getParam("title"),
+            $request->getParam("body")
+        );
+        if ($post instanceof Post) {
+            return $response->withRedirect("/post/{$post->post_id}");
+        } else {
+            return $response->withRedirect("/post/new");
+        }
     }
 }
