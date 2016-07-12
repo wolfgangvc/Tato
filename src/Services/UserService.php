@@ -29,8 +29,7 @@ class UserService
         }
 
         if ($logicalDelete) {
-            $user->deleted = User::STATE_IS_DELETED;
-            $user->save();
+            $user->logicalDelete();
         } else {
             $user->delete();
         }

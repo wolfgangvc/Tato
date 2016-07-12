@@ -72,8 +72,7 @@ class PostService
         if ($post_id > 0) {
             $post = $this->getByID($post_id);
             if ($post instanceof Post) {
-                $post->deleted = "yes";
-                $post->save();
+                $post->logicalDelete();
                 return $post;
             }
         }

@@ -29,8 +29,7 @@ class CommentService
 
     public function deleteComment(Comment $comment)
     {
-        $comment->deleted = Comment::STATE_IS_DELETED;
-        $comment->save();
+        $comment->logicalDelete();
         return true;
     }
 
