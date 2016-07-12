@@ -27,6 +27,15 @@ class CommentService
             ->exec();
     }
 
+    public function getByUserID(int $id)
+    {
+        return Comment::search()
+            ->where("user_id", $id)
+            ->where("deleted", Comment::STATE_IS_NOT_DELETED)
+            ->order("created", "DESC")
+            ->exec();
+    }
+
     public function deleteComment(Comment $comment)
     {
         $comment->logicalDelete();

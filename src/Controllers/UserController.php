@@ -4,6 +4,9 @@ namespace Tato\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
+use Tato\Models\User;
+use Tato\Services\CommentService;
+use Tato\Services\PostService;
 use Tato\Services\UserService;
 
 class UserController
@@ -12,13 +15,19 @@ class UserController
     protected $twig;
     /** @var UserService  */
     protected $userService;
+    /** @var PostService  */
+    protected $postService;
+    /** @var CommentService  */
+    protected $commentService;
 
     protected $error;
 
-    public function __construct(Twig $twig, UserService $userService)
+    public function __construct(Twig $twig, UserService $userService, PostService $postService, CommentService $commentService)
     {
         $this->twig = $twig;
         $this->userService = $userService;
+        $this->postService = $postService;
+        $this->commentService = $commentService;
     }
 
     public function showLogin(Request $request, Response $response, $args)
@@ -79,6 +88,36 @@ class UserController
                 'users/dashboard.html.twig',
                 [
                     "user" => $sUser
+                ]
+            );
+    }
+
+    public function showUserPage(Request $request, Response $response, $args)
+    {
+        $pageUser = $this->userService->getByID((int) $args["id"]);
+        if (!$pageUser instanceof User) {
+            $pageUser = $this->userService->getByName($args["id"]);
+            if (!$pageUser instanceof User) {
+                return $response->withStatus(404, "USER NOT FOUND");
+            }
+        }
+
+        $posts = $this->postService->getByUserID($pageUser->user_id);
+        $comments = $this->commentService->getByUserID($pageUser->user_id);
+
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
+        return $this->twig
+            ->render(
+                $response,
+                'users/view.html.twig',
+                [
+                    "user" => $sUser,
+                    "pageUser" => $pageUser,
+                    "posts" => $posts,
+                    "comments" => $comments
                 ]
             );
     }

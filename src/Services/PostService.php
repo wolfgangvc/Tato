@@ -34,7 +34,7 @@ class PostService
             ->exec();
     }
 
-    public function getPostsByUser(int $user_id, int $limit = 10, int $offset = 0, $includeDeleted = false)
+    public function getByUserID(int $user_id, int $limit = 10, int $offset = 0, $includeDeleted = false)
     {
         if ($user_id < 1) {
             return false;

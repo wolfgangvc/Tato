@@ -85,7 +85,9 @@ class Tato
         $this->container[UserController::class] = function (\Slim\Container $container) {
             return new UserController(
                 $container->get("view"),
-                $container->get(UserService::class)
+                $container->get(UserService::class),
+                $container->get(PostService::class),
+                $container->get(CommentService::class)
             );
         };
         $this->container[PostService::class] = function (\Slim\Container $container) {
@@ -171,6 +173,7 @@ class Tato
             $this->get("/register", UserController::class . ":showRegister");
             $this->post("/register", UserController::class . ":doRegister");
             $this->get("/dashboard", UserController::class . ":showDashboard");
+            $this->get("/{id}", UserController::class . ":showUserPage");
         });
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');

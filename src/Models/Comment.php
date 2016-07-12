@@ -1,8 +1,6 @@
 <?php
 namespace Tato\Models;
 
-use Michelf\MarkdownExtra;
-
 /**
  * Class Comment
  * @package Tato\Models
@@ -24,6 +22,8 @@ class Comment extends BaseModel
 
     /** @var  User */
     protected $_user;
+    /** @var  Post */
+    protected $_post;
 
     /**
      * @return false|User
@@ -35,5 +35,17 @@ class Comment extends BaseModel
             $this->_user = User::search()->where('user_id', $this->user_id)->execOne();
         }
         return $this->_user;
+    }
+
+    /**
+     * @return false|Post
+     * @throws \Thru\ActiveRecord\Exception
+     */
+    public function getPost()
+    {
+        if (!$this->_post) {
+            $this->_post = Post::search()->where("post_id", $this->post_id)->execOne();
+        }
+        return $this->_post;
     }
 }

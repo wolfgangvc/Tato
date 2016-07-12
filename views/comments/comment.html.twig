@@ -4,7 +4,8 @@
         <p>{{ comment.body }}</p>
     </div>
     <div class="col-sm-3">
-        <p>Created by {{ comment.getUser().display_name }}</p>
+        <p>Created by <a href="/user/{{ comment.getUser().name }}">{{ comment.getUser().display_name }}</a></p>
+        <p>On post <a href="/post/{{ comment.post_id }}">{{ comment.getPost().title }}</a></p>
         <p>{{ comment.created }}</p>
         {% if comment.user_id == user.user_id %}
             <div class="btn-group" role="group">

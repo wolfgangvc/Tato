@@ -21,6 +21,18 @@ class UserService
             ->execOne();
     }
 
+    public function getByName(string $name, $includeDeleted = false)
+    {
+        $name = strtolower($name);
+        $search = User::search();
+        if (!$includeDeleted) {
+            $search->where("deleted", User::STATE_IS_NOT_DELETED);
+        }
+        return $search
+            ->where("name", $name)
+            ->execOne();
+    }
+
     public function deleteUser(int $user_id, $logicalDelete = true)
     {
         $user = User::search()->where("user_id", $user_id)->execOne();

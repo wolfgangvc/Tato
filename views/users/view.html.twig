@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    TATO USER {{ pageUser.name }}
+{% endblock %}
+
+{% block content %}
+    <p>User_ID : {{ pageUser.user_id }}</p>
+    <p>Username : {{ pageUser.name }}</p>
+    <hr/>
+    <h2>Posts : </h2>
+    {% include "posts/list.html.twig" %}
+    <hr />
+    <h2>Comments : </h2>
+    {% include "comments/list.html.twig" %}
+{% endblock %}
