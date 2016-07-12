@@ -1,8 +1,6 @@
 <?php
 namespace Tato\Models;
 
-use Thru\ActiveRecord\ActiveRecord;
-
 /**
  * Class Post
  * @package Tato\Models
@@ -13,10 +11,8 @@ use Thru\ActiveRecord\ActiveRecord;
  * @var $verify_key = TEXT
  * @var $email_verified = ENUM("yes","no")
  * @var $pass TEXT
- * @var $created DATE
- * @var $deleted ENUM("yes","no")
  */
-class User extends ActiveRecord
+class User extends BaseModel
 {
     protected $_table = "users";
 
@@ -25,20 +21,9 @@ class User extends ActiveRecord
     public $display_name;
     public $email;
     public $verify_key;
-    public $email_verified = "no";
+    public $email_verified = self::STATE_EMAIL_NOT_VERIFIED;
     public $pass;
-    public $created;
-    public $deleted = self::STATE_IS_NOT_DELETED;
 
-    const STATE_IS_DELETED = "yes";
-    const STATE_IS_NOT_DELETED = "no";
-
-    public function save($automatic_reload = true)
-    {
-        if (!$this->created) {
-            $this->created = date("Y-m-d H:i:s");
-            $this->verify_key = sha1((string)rand(100000000, 999999999));
-        }
-        parent::save($automatic_reload);
-    }
+    const STATE_EMAIL_VERIFIED = "yes";
+    const STATE_EMAIL_NOT_VERIFIED = "no";
 }

@@ -1,8 +1,6 @@
 <?php
 namespace Tato\Models;
 
-use Thru\ActiveRecord\ActiveRecord;
-
 /**
  * Class Post
  * @package Tato\Models
@@ -10,10 +8,8 @@ use Thru\ActiveRecord\ActiveRecord;
  * @var $user_id INTEGER
  * @var $title TEXT
  * @var $body TEXT
- * @var $created DATE
- * @var $deleted ENUM("yes","no")
  */
-class Post extends ActiveRecord
+class Post extends BaseModel
 {
     protected $_table = "posts";
 
@@ -21,21 +17,8 @@ class Post extends ActiveRecord
     public $user_id;
     public $title;
     public $body;
-    public $created;
-    public $deleted = self::STATE_IS_NOT_DELETED;
 
     protected $_user;
-
-    const STATE_IS_DELETED = "yes";
-    const STATE_IS_NOT_DELETED = "no";
-
-    public function save($automatic_reload = true)
-    {
-        if (!$this->created) {
-            $this->created = date("Y-m-d H:i:s");
-        }
-        parent::save($automatic_reload);
-    }
 
     /**
      * @return false|User

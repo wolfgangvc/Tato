@@ -83,10 +83,13 @@ class UserService
             $displayName = $username;
         }
 
+        
+        
         $user = new User();
         $user->name = $username;
         $user->email = $email;
         $user->display_name = $displayName;
+        $user->verify_key = sha1((string)rand(100000000, 999999999));
         $user->pass = password_hash($password, PASSWORD_DEFAULT);
         $user->save();
 
