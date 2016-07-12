@@ -1,6 +1,10 @@
 <?php
 namespace Tato\Models;
 
+use Michelf\Markdown;
+use Michelf\MarkdownExtra;
+use Symfony\Component\Yaml\Dumper;
+
 /**
  * Class Post
  * @package Tato\Models
@@ -30,5 +34,10 @@ class Post extends BaseModel
             $this->_user = User::search()->where('user_id', $this->user_id)->execOne();
         }
         return $this->_user;
+    }
+
+    public function getMarkdown()
+    {
+        return html_entity_decode(MarkdownExtra::defaultTransform($this->body));
     }
 }

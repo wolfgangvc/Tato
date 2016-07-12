@@ -16,7 +16,8 @@
         "twbs/bootstrap": "^3.3",
         "thru.io/active_record": "^0.4.3",
         "hackzilla/password-generator": "^1.2",
-        "components/font-awesome": "^4.6"
+        "components/font-awesome": "^4.6",
+        "michelf/php-markdown": "^1.6"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "dev-master",
