@@ -19,9 +19,9 @@ class UserServiceTest extends BaseTest
 
     /**
      * @expectedException \Tato\Exceptions\UserRegistrationException
-     * @expectedExceptionMessage Email Invalid
+     * @expectedExceptionMessage Email Invalid :
      */
-    public function testUserServiceInvlidEmail()
+    public function testUserServiceInvalidEmail()
     {
         $this->userService->newUser("fake", "", "", "");
     }

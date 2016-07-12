@@ -63,8 +63,7 @@ class UserService
         $email = strtolower($email);
         $username = strtolower($username);
         // Check for valid email address
-        $email = filter_var($email, FILTER_VALIDATE_EMAIL);
-        if (!$email) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new UserRegistrationException("Email Invalid : \"{$email}\"");
         }
 
