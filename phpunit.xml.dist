@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="bootstrap.php"
          colors="true"
-         stopOnFailure="false"
+         stopOnFailure="true"
+         stopOnError="true"
          syntaxCheck="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -16,6 +17,7 @@
 
     <logging>
         <log type="coverage-clover" target="build/clover.xml"/>
+        <log type="coverage-html" target="build/"/>
     </logging>
 
     <filter>

@@ -16,6 +16,8 @@
 
     <link href="/css/tato.css" rel="stylesheet">
 
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -37,16 +39,13 @@
                 <li>
                     <a class="navbar-link" href="/posts/1">Posts</a>
                 </li>
+                {% if user %}
+                <li>
+                    <a class="navbar-link" href="/post/new">+ Post</a>
+                </li>
+                {% endif %}
             </ul>
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" placeholder="Email" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-success">Sign in</button>
-            </form>
+            {% include "users/navbarUser.html.twig" %}
         </div><!--/.navbar-collapse -->
     </div>
 </nav>
@@ -54,7 +53,7 @@
 <div class="container">
     {% block content %}<h2>There should be something here!!!!</h2>{% endblock %}
 </div>
-
+<hr />
 <div class="container">
     <footer>
         <p>&copy; 2015 Company, Inc.</p>

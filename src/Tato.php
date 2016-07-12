@@ -7,8 +7,11 @@ use Slim\Http\Response;
 use Tato\Controllers\CommentController;
 use Tato\Controllers\HomeController;
 use Tato\Controllers\PostController;
+use Tato\Controllers\UserController;
 use Tato\Services\CommentService;
 use Tato\Services\PostService;
+use Tato\Services\SessionService;
+use Tato\Services\UserService;
 use Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware;
 
 class Tato
@@ -24,6 +27,7 @@ class Tato
 
     public function __construct()
     {
+        $this->setupSession();
         $this->setupSlim();
         $this->setupTwig();
         $this->setupDependencies();
@@ -36,6 +40,11 @@ class Tato
     public function getContainer()
     {
         return $this->container;
+    }
+
+    public function setupSession()
+    {
+        session_start();
     }
 
     protected function setupSlim()
@@ -73,11 +82,20 @@ class Tato
                 $container->get(CommentService::class)
             );
         };
+        $this->container[UserController::class] = function (\Slim\Container $container) {
+            return new UserController(
+                $container->get("view"),
+                $container->get(UserService::class)
+            );
+        };
         $this->container[PostService::class] = function (\Slim\Container $container) {
             return new PostService();
         };
         $this->container[CommentService::class] = function (\Slim\Container $container) {
             return new CommentService();
+        };
+        $this->container[UserService::class] = function (\Slim\Container $container) {
+            return new UserService();
         };
     }
 
@@ -127,12 +145,30 @@ class Tato
                 $this->get("/{id}", PostController::class . ':showEditPost');
                 $this->post("/{id}", PostController::class . ':doEditPost');
             });
+            $this->group("/delete", function () {
+                $this->get("/{id}", PostController::class . ':showDeletePost');
+                $this->post("/{id}", PostController::class . ':doDeletePost');
+            });
             $this->get("/{id}", PostController::class . ':showPost');
         });
-        $this->slim->group("/comments", function () {
-            $this->get("/edit/{id}", CommentController::class . ":showEditComment");
-            $this->post("/edit", CommentController::class . ":doEditComment");
-            $this->post("/delete/{id}", CommentController::class . ":doDeleteComment");
+        $this->slim->group("/comment", function () {
+            $this->group("/edit", function () {
+                $this->get("/{id}", CommentController::class . ":showEditComment");
+                $this->post("/{id}", CommentController::class . ":doEditComment");
+                $this->post("", CommentController::class . ":doEditComment");
+            });
+            $this->group("/delete", function () {
+                $this->get("/{id}", CommentController::class . ":showDeleteComment");
+                $this->post("/{id}", CommentController::class . ":doDeleteComment");
+            });
+        });
+        $this->slim->group("/user", function () {
+            $this->get("/login", UserController::class . ":showLogin");
+            $this->post("/login", UserController::class . ":doLogin");
+            $this->get("/logout", UserController::class . ":doLogout");
+            $this->get("/register", UserController::class . ":showRegister");
+            $this->post("/register", UserController::class . ":doRegister");
+            $this->get("/dashboard", UserController::class . ":showDashboard");
         });
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');

@@ -6,25 +6,29 @@ use Thru\ActiveRecord\ActiveRecord;
 /**
  * Class Post
  * @package Tato\Models
- * @var $post_id INTEGER
  * @var $user_id INTEGER
- * @var $title TEXT
- * @var $body TEXT
+ * @var $name TEXT
+ * @var $display_name TEXT
+ * @var $email TEXT
+ * @var $verify_key = TEXT
+ * @var $email_verified = ENUM("yes","no")
+ * @var $pass TEXT
  * @var $created DATE
  * @var $deleted ENUM("yes","no")
  */
-class Post extends ActiveRecord
+class User extends ActiveRecord
 {
-    protected $_table = "posts";
+    protected $_table = "users";
 
-    public $post_id;
     public $user_id;
-    public $title;
-    public $body;
+    public $name;
+    public $display_name;
+    public $email;
+    public $verify_key;
+    public $email_verified = "no";
+    public $pass;
     public $created;
     public $deleted = self::STATE_IS_NOT_DELETED;
-
-    protected $_user;
 
     const STATE_IS_DELETED = "yes";
     const STATE_IS_NOT_DELETED = "no";
@@ -33,19 +37,8 @@ class Post extends ActiveRecord
     {
         if (!$this->created) {
             $this->created = date("Y-m-d H:i:s");
+            $this->verify_key = sha1((string)rand(100000000, 999999999));
         }
         parent::save($automatic_reload);
-    }
-
-    /**
-     * @return false|User
-     * @throws \Thru\ActiveRecord\Exception
-     */
-    public function getUser()
-    {
-        if (!$this->_user) {
-            $this->_user = User::search()->where('user_id', $this->user_id)->execOne();
-        }
-        return $this->_user;
     }
 }
