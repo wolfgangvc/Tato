@@ -1,6 +1,8 @@
 <?php
 namespace Tato\Models;
 
+use Michelf\MarkdownExtra;
+
 /**
  * Class Post
  * @package Tato\Models
@@ -33,5 +35,10 @@ class Comment extends BaseModel
             $this->_user = User::search()->where('user_id', $this->user_id)->execOne();
         }
         return $this->_user;
+    }
+
+    public function getMarkdown()
+    {
+        return MarkdownExtra::defaultTransform($this->body);
     }
 }

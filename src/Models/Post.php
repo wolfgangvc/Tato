@@ -38,6 +38,6 @@ class Post extends BaseModel
 
     public function getMarkdown()
     {
-        return html_entity_decode(MarkdownExtra::defaultTransform($this->body));
+        return MarkdownExtra::defaultTransform($this->body);
     }
 }
