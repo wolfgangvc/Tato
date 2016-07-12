@@ -2,7 +2,7 @@
 namespace Tato\Models;
 
 /**
- * Class Post
+ * Class User
  * @package Tato\Models
  * @var $user_id INTEGER
  * @var $name TEXT

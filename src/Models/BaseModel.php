@@ -4,12 +4,12 @@ namespace Tato\Models;
 use Thru\ActiveRecord\ActiveRecord;
 
 /**
- * Class Post
+ * Class BaseModel
  * @package Tato\Models
- * @var $created DATE
  * @var $deleted ENUM("yes","no")
+ * @var $created DATE
  */
-class BaseModel extends ActiveRecord
+abstract class BaseModel extends ActiveRecord
 {
     public $created;
     public $deleted = self::STATE_IS_NOT_DELETED;

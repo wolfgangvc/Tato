@@ -8,9 +8,9 @@ use Tato\Controllers\CommentController;
 use Tato\Controllers\HomeController;
 use Tato\Controllers\PostController;
 use Tato\Controllers\UserController;
+use Tato\Extensions\TwigMarkdownExtension;
 use Tato\Services\CommentService;
 use Tato\Services\PostService;
-use Tato\Services\SessionService;
 use Tato\Services\UserService;
 use Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware;
 
@@ -125,6 +125,8 @@ class Tato
             );
 
             $view->addExtension(new \Twig_Extensions_Extension_Text());
+            
+            $view->addExtension(new TwigMarkdownExtension());
 
             return $view;
         };

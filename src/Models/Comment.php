@@ -4,7 +4,7 @@ namespace Tato\Models;
 use Michelf\MarkdownExtra;
 
 /**
- * Class Post
+ * Class Comment
  * @package Tato\Models
  * @var $comment_id INTEGER
  * @var $post_id INTEGER
@@ -35,10 +35,5 @@ class Comment extends BaseModel
             $this->_user = User::search()->where('user_id', $this->user_id)->execOne();
         }
         return $this->_user;
-    }
-
-    public function getMarkdown()
-    {
-        return MarkdownExtra::defaultTransform($this->body);
     }
 }

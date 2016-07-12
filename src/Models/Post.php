@@ -35,9 +35,4 @@ class Post extends BaseModel
         }
         return $this->_user;
     }
-
-    public function getMarkdown()
-    {
-        return MarkdownExtra::defaultTransform($this->body);
-    }
 }

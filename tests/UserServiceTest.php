@@ -201,7 +201,11 @@ class UserServiceTest extends BaseTest
         return $testUser;
     }
 
-    public function testUserServiceNewUserDisplayNameShort()
+
+    /**
+     * @depends testUserTrueDeleteCache
+     */
+    public function testUserServiceNewUserDisplayNameShort(User $testUser)
     {
         /** @var $user User */
         $email = $this->faker->safeEmail;
