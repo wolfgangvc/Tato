@@ -28,7 +28,10 @@ class User extends ActiveRecord
     public $email_verified = "no";
     public $pass;
     public $created;
-    public $deleted = "no";
+    public $deleted = self::STATE_IS_NOT_DELETED;
+
+    const STATE_IS_DELETED = "yes";
+    const STATE_IS_NOT_DELETED = "no";
 
     public function save($automatic_reload = true)
     {

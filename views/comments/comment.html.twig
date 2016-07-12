@@ -1,3 +1,9 @@
 <h3>{{ comment.title }}</h3>
 <p>{{ comment.body }}</p>
-<p>{{ comment.created }}</p>
+<p>Created by {{ comment.getUser().display_name }} at {{ comment.created }}</p>
+{% if comment.user_id == user.user_id %}
+    <div class="btn-group" role="group">
+        <a class="btn btn-default" href="/comment/edit/{{ comment.comment_id }}"><i class="fa fa-edit fa-1g"></i> Edit Comment</a>
+        <a class="btn btn-danger" href="/comment/delete/{{ comment.comment_id }}"><i class="fa fa-trash fa-1g"></i> Delete Comment</a>
+    </div>
+{% endif %}

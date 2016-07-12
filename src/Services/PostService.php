@@ -2,6 +2,7 @@
 namespace Tato\Services;
 
 use Tato\Models\Post;
+use Tato\Models\User;
 
 class PostService
 {
@@ -9,40 +10,54 @@ class PostService
     {
     }
 
-    public function getByID(int $id)
+    public function getByID(int $id, $allowDeleted = false)
     {
-        return Post::search()
-            ->where("deleted", "no")
+        $search = Post::search();
+        if (!$allowDeleted) {
+            $search->where("deleted", "no");
+        }
+        return $search
             ->where("post_id", $id)
             ->execOne();
     }
 
-    public function getPosts(int $limit = 10, int $offset = 0)
+    public function getPosts(int $limit = 10, int $offset = 0, $includeDeleted = false)
     {
         $limit = ($limit < 1) ? 1 : $limit;
         $offset = ($offset < 0) ? 0 : $offset;
-        return Post::search()
-            ->where("deleted", "no")
+        $search = Post::search();
+        if (!$includeDeleted) {
+            $search->where("deleted", "no");
+        }
+        return $search
             ->limit($limit, $offset)
             ->exec();
     }
 
-    public function getPostsByUser(int $user_id, int $limit = 10, int $offset = 0)
+    public function getPostsByUser(int $user_id, int $limit = 10, int $offset = 0, $includeDeleted = false)
     {
         if ($user_id < 1) {
             return false;
         }
-
-        return Post::search()
-            ->where("deleted", "no")
+        $limit = ($limit < 1) ? 1 : $limit;
+        $offset = ($offset < 0) ? 0 : $offset;
+        $search = Post::search();
+        if (!$includeDeleted) {
+            $search->where("deleted", "no");
+        }
+        return $search
             ->where("user_id", $user_id)
             ->limit($limit, $offset)
             ->exec();
     }
 
-    public function getPostCount()
+    public function getPostCount($showDeleted = false)
     {
-        return Post::search()->count();
+        $search = Post::search();
+        if (!$showDeleted) {
+            $search->where("deleted", "no");
+        }
+        return $search->count();
     }
 
     public function getLatestPost()
@@ -84,14 +99,16 @@ class PostService
     
     public function newPost(string $title, string $body)
     {
-        if (isset($SESSION["user"])) {
+        if (isset($_SESSION["user"])) {
             $sUser = $_SESSION["user"];
-            $post = new Post();
-            $post->user_id = $sUser["user_id"];
-            $post->title = $title;
-            $post->body = $body;
-            $post->save();
-            return $post;
+            if ($sUser instanceof User) {
+                $post = new Post();
+                $post->user_id = $sUser->user_id;
+                $post->title = $title;
+                $post->body = $body;
+                $post->save();
+                return $post;
+            }
         }
         return false; //new post has failed return false
     }

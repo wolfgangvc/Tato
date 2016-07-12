@@ -6,11 +6,19 @@
 
 {% block content %}
     {%  include 'posts/post.html.twig' %}
-    <a href="/post/edit/{{ post.post_id }}">Edit Post</a>
+    {% if post.user_id == user.user_id %}
+    <div class="btn-group" role="group">
+        <a class="btn btn-default" href="/post/edit/{{ post.post_id }}"><i class="fa fa-edit fa-1g"></i> Edit Post</a>
+        <a class="btn btn-danger" href="/post/delete/{{ post.post_id }}"><i class="fa fa-trash fa-1g"></i> Delete Post</a>
+    </div>
+    {% endif %}
     <hr/>
+    <h3>Comments : </h3>
+    {% if user %}
     <div class="well">
         {% include "comments/edit.html.twig" %}
     </div>
+    {% endif %}
     <div class="well">
         {% include "comments/list.html.twig" %}
     </div>

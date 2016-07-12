@@ -145,12 +145,22 @@ class Tato
                 $this->get("/{id}", PostController::class . ':showEditPost');
                 $this->post("/{id}", PostController::class . ':doEditPost');
             });
+            $this->group("/delete", function () {
+                $this->get("/{id}", PostController::class . ':showDeletePost');
+                $this->post("/{id}", PostController::class . ':doDeletePost');
+            });
             $this->get("/{id}", PostController::class . ':showPost');
         });
-        $this->slim->group("/comments", function () {
-            $this->get("/edit/{id}", CommentController::class . ":showEditComment");
-            $this->post("/edit", CommentController::class . ":doEditComment");
-            $this->post("/delete/{id}", CommentController::class . ":doDeleteComment");
+        $this->slim->group("/comment", function () {
+            $this->group("/edit", function () {
+                $this->get("/{id}", CommentController::class . ":showEditComment");
+                $this->post("/{id}", CommentController::class . ":doEditComment");
+                $this->post("", CommentController::class . ":doEditComment");
+            });
+            $this->group("/delete", function () {
+                $this->get("/{id}", CommentController::class . ":showDeleteComment");
+                $this->post("/{id}", CommentController::class . ":doDeleteComment");
+            });
         });
         $this->slim->group("/user", function () {
             $this->get("/login", UserController::class . ":showLogin");

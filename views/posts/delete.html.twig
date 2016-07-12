@@ -1,0 +1,26 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    TATO DELETE POST : {{ post.title }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2> Delete Post : {{ post.title }}</h2>
+        <form action="" method="POST">
+            <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
+            <div class="form-group">
+                <label for="title">Enter title of post to Delete : </label>
+                <input name="title" type="text" class="form-control" id="title"
+                       placeholder="{{ post.title }}">
+            </div>
+            {% if deleteFail == true %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Failed : </strong> Title not correct
+                </div>
+            {% endif %}
+            <a class="btn btn-primary" href="/post/{{ post.post_id }}">Cancel</a>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+{% endblock %}

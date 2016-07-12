@@ -5,6 +5,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
 use Tato\Models\Post;
+use Tato\Models\User;
 use Tato\Services\CommentService;
 use Tato\Services\PostService;
 
@@ -140,7 +141,57 @@ class PostController
         if ($post instanceof Post) {
             return $response->withRedirect("/post/{$post->post_id}");
         } else {
-            return $response->withRedirect("/post/new");
+            return $this->showNewPost($request, $response, $args);
         }
+    }
+
+    public function showDeletePost(Request $request, Response $response, $args, $fail = false)
+    {
+        $post = $this->postService->getByID($args["id"]);
+        if (!$post instanceof Post) {
+            return $response->withStatus(404, "POST NOT FOUND");
+        }
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
+        if ($sUser instanceof User) {
+            if ($sUser->user_id == $post->user_id) {
+                return $this->twig
+                    ->render(
+                        $response,
+                        'posts/delete.html.twig',
+                        [
+                            "post" => $post,
+                            "user" => $sUser,
+                            "deleteFail" => $fail
+                        ]
+                    );
+            }
+        }
+        return $response->withRedirect("/post/" . $post->post_id);
+    }
+
+    public function doDeletePost(Request $request, Response $response, $args)
+    {
+        $post = $this->postService->getByID($args["id"]);
+        if (!$post instanceof Post) {
+            return $response->withStatus(404, "POST NOT FOUND");
+        }
+        $sUser = null;
+        if (isset($_SESSION["user"])) {
+            $sUser = $_SESSION["user"];
+        }
+        if ($sUser instanceof User) {
+            if ($sUser->user_id == $post->user_id) {
+                if ($request->getParam("title") == $post->title) {
+                    $this->postService->deletePost($post->post_id);
+                    return $response->withRedirect("/posts/1");
+                } else {
+                    return $this->showDeletePost($request, $response, $args, true);
+                }
+            }
+        }
+        return $response->withRedirect("/post/" . $post->post_id);
     }
 }

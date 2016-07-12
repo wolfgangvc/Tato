@@ -24,7 +24,13 @@ class Comment extends ActiveRecord
     public $title;
     public $body;
     public $created;
-    public $deleted = "no";
+    public $deleted = self::STATE_IS_NOT_DELETED;
+
+    /** @var  User */
+    protected $_user;
+    
+    const STATE_IS_DELETED = "yes";
+    const STATE_IS_NOT_DELETED = "no";
 
     public function save($automatic_reload = true)
     {
@@ -32,5 +38,17 @@ class Comment extends ActiveRecord
             $this->created = date("Y-m-d H:i:s");
         }
         parent::save($automatic_reload);
+    }
+
+    /**
+     * @return false|User
+     * @throws \Thru\ActiveRecord\Exception
+     */
+    public function getUser()
+    {
+        if (!$this->_user) {
+            $this->_user = User::search()->where('user_id', $this->user_id)->execOne();
+        }
+        return $this->_user;
     }
 }
