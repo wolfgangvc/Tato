@@ -2,6 +2,7 @@
 namespace Tato\Services;
 
 use phpDocumentor\Reflection\Types\Boolean;
+use Tato\Exceptions\DeletePostException;
 use Tato\Exceptions\EditPostException;
 use Tato\Exceptions\NewPostException;
 use Tato\Models\Post;
@@ -74,16 +75,34 @@ class PostService
             ->execOne();
     }
 
-    public function deletePost(int $post_id)
+    /**
+     * @param int $post_id
+     * @param bool $logicalDelete
+     * @return Post
+     * @throws DeletePostException
+     */
+    public function deletePost(int $post_id, $logicalDelete = true)
     {
         if ($post_id > 0) {
-            $post = $this->getByID($post_id);
+            $post = Post::search()->where("post_id", $post_id)->execOne();
             if ($post instanceof Post) {
-                $post->logicalDelete();
-                return $post;
+                $sUser = $this->sessionService->getUser();
+                if ($sUser instanceof User) {
+                    if ($sUser->user_id == $post->user_id) {
+                        if ($logicalDelete) {
+                            $post->logicalDelete();
+                        } else {
+                            $post->delete();
+                        }
+                        return $post;
+                    }
+                    throw new DeletePostException("User Not Valid : \"{$sUser->user_id}\"");
+                }
+                throw new DeletePostException("No Valid User Session");
             }
+            throw new DeletePostException("No post with id : \"{$post_id}\"");
         }
-        return false;
+        throw new DeletePostException("Invalid Post ID : \"{$post_id}\"");
     }
 
     /**
@@ -109,7 +128,7 @@ class PostService
                         $change = true;
                     }
                     if (strlen($body) > 2) {
-                        $post->title = $body;
+                        $post->body = $body;
                         $change = true;
                     }
                     if (!$change) {
