@@ -2,7 +2,9 @@
 
 namespace Tato\Test;
 
+use Tato\Models\User;
 use Tato\Services\PostService;
+use Tato\Services\TestSessionService;
 use Tato\Models\Post;
 
 class PostServiceTest extends BaseTest
@@ -10,10 +12,22 @@ class PostServiceTest extends BaseTest
     /** @var  PostService */
     protected $postService;
 
+    /** @var  User */
+    protected $fakeUser;
+    /** @var  User */
+    protected $fakeUser2;
+    /** @var  TestSessionService */
+    protected $sessionService;
+
     public function setUp()
     {
         parent::setUp();
-        $this->postService = new PostService();
+        $this->sessionService = new TestSessionService();
+
+        $this->fakeUser = new User();
+        $this->fakeUser2 = new User();
+
+        $this->postService = new PostService($this->sessionService);
     }
 
     /**

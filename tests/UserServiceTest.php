@@ -2,6 +2,8 @@
 
 namespace Tato\Test;
 
+use Tato\Exceptions\UserLoginException;
+use Tato\Services\TestSessionService;
 use Tato\Services\UserService;
 use Tato\Models\User;
 use Thru\ActiveRecord\SearchIndex;
@@ -10,11 +12,44 @@ class UserServiceTest extends BaseTest
 {
     /** @var  UserService */
     protected $userService;
+    /** @var  String */
+    protected $password = "Fak3P455**";
+
+    /** @var  TestSessionService */
+    protected $sessionService;
 
     public function setUp()
     {
         parent::setUp();
-        $this->userService = new UserService();
+
+        $this->sessionService = new TestSessionService();
+        $this->sessionService->start();
+        $this->userService = new UserService($this->sessionService);
+    }
+
+    /**
+     * @expectedException \Tato\Exceptions\UserLoginException
+     * @expectedExceptionMessage No user found with username/email :
+     */
+    public function testUserServiceLoginNotRegisteredUsername()
+    {
+        $this->userService->loginUser(
+            $this->faker->userName,
+            $this->password
+        );
+    }
+
+
+    /**
+     * @expectedException \Tato\Exceptions\UserLoginException
+     * @expectedExceptionMessage No user found with username/email :
+     */
+    public function testUserServiceLoginNotRegisteredEmail()
+    {
+        $this->userService->loginUser(
+            $this->faker->safeEmail,
+            $this->password
+        );
     }
 
     /**
@@ -59,13 +94,11 @@ class UserServiceTest extends BaseTest
         /** @var $testUser User */
         $email = $this->faker->safeEmail;
         $name = $this->faker->userName;
-        $pass = $this->faker->password;
         $dName = $this->faker->name;
-
         $testUser = $this->userService->newUser(
             $email,
             $name,
-            $pass,
+            $this->password,
             $dName
         );
 
@@ -77,7 +110,7 @@ class UserServiceTest extends BaseTest
 
         $this->assertEquals(strtolower($email), $testUser->email);
         $this->assertEquals(strtolower($name), $testUser->name);
-        $this->assertTrue(password_verify($pass, $testUser->pass));
+        $this->assertTrue(password_verify($this->password, $testUser->pass));
         $this->assertEquals($dName, $testUser->display_name);
 
         return $testUser;
@@ -98,6 +131,80 @@ class UserServiceTest extends BaseTest
         $this->assertEquals($testUser->display_name, $user->display_name);
         $this->assertEquals(User::STATE_IS_NOT_DELETED, $user->deleted);
     }
+
+    /**
+     * @depends testUserServiceNewUser
+     */
+    public function testUserServiceGetByName(User $testUser)
+    {
+        /** @var $user User */
+        $user = $this->userService->getByName($testUser->name);
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertEquals($testUser->email, $user->email);
+        $this->assertEquals($testUser->name, $user->name);
+        $this->assertEquals($testUser->pass, $user->pass);
+        $this->assertEquals($testUser->display_name, $user->display_name);
+        $this->assertEquals(User::STATE_IS_NOT_DELETED, $user->deleted);
+    }
+
+    /**
+     * @depends testUserServiceNewUser
+     */
+    public function testUserServiceLoginInvalidPassword(User $testUser)
+    {
+        $this->assertFalse($this->userService->loginUser($testUser->name, "passwd"));
+        return $testUser;
+    }
+
+    /**
+     * @depends testUserServiceNewUser
+     */
+    public function testUserServiceLoginUserUsername(User $testUser)
+    {
+        $user = $this->userService->loginUser(
+            $testUser->name,
+            $this->password
+        );
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertEquals($testUser, $user);
+        $this->assertEquals($testUser, $this->sessionService->getUser());
+
+        return $testUser;
+    }
+
+    /**
+     * @depends testUserServiceLoginUserUsername
+     */
+    public function testUserServiceLogout(User $testUser)
+    {
+        $this->userService->logoutUser();
+
+        $this->assertFalse($this->sessionService->getUser());
+
+        return $testUser;
+    }
+
+    /**
+     * @depends testUserServiceLogout
+     */
+    public function testUserServiceLoginUserEmail(User $testUser)
+    {
+        $this->sessionService->start();
+
+        $user = $this->userService->loginUser(
+            $testUser->email,
+            $this->password
+        );
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertEquals($testUser, $user);
+        $this->assertEquals($testUser, $this->sessionService->getUser());
+
+        return $testUser;
+    }
+
 
     /**
      * @depends testUserServiceNewUser
@@ -133,7 +240,7 @@ class UserServiceTest extends BaseTest
      * @expectedException \Tato\Exceptions\UserRegistrationException
      * @expectedExceptionMessageRegExp /Invalid User ID to delete : \"(.*)\"/
      */
-    public function testUserDeleteInvalidID()
+    public function testUserServiceDeleteInvalidID()
     {
         $this->userService->deleteUser(-2);
         // @todo test a lookup.
@@ -142,7 +249,7 @@ class UserServiceTest extends BaseTest
     /**
      * @depends testUserServiceNewUser
      */
-    public function testUserLogicalDelete(User $testUser)
+    public function testUserServiceLogicalDelete(User $testUser)
     {
         /** @var $user User */
 
@@ -169,9 +276,9 @@ class UserServiceTest extends BaseTest
     }
 
     /**
-     * @depends testUserLogicalDelete
+     * @depends testUserServiceLogicalDelete
      */
-    public function testUserTrueDelete(User $testUser)
+    public function testUserServiceTrueDelete(User $testUser)
     {
         /** @var $user User */
         $user = $this->userService->deleteUser($testUser->user_id, false);
@@ -188,9 +295,9 @@ class UserServiceTest extends BaseTest
     }
 
     /**
-     * @depends testUserTrueDelete
+     * @depends testUserServiceTrueDelete
      */
-    public function testUserTrueDeleteCache(User $testUser)
+    public function testUserServiceTrueDeleteCache(User $testUser)
     {
         // Fix for bug in Active Record See : https://github.com/Thruio/ActiveRecord/pull/26
         SearchIndex::getInstance()->wipe();
@@ -203,7 +310,7 @@ class UserServiceTest extends BaseTest
 
 
     /**
-     * @depends testUserTrueDeleteCache
+     * @depends testUserServiceTrueDeleteCache
      */
     public function testUserServiceNewUserDisplayNameShort(User $testUser)
     {

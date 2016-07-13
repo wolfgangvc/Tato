@@ -1,13 +1,18 @@
 <?php
 namespace Tato\Services;
 
+use Tato\Exceptions\UserLoginException;
 use Tato\Exceptions\UserRegistrationException;
 use Tato\Models\User;
 
 class UserService
 {
-    public function __construct()
+    /** @var SessionService  */
+    protected $sessionService;
+
+    public function __construct($sessionService)
     {
+        $this->sessionService = $sessionService;
     }
 
     public function getByID(int $id, $includeDeleted = false)
@@ -61,7 +66,13 @@ class UserService
     public function newUser(string $email, string $username, string $password, string $displayName = "")
     {
         $email = strtolower($email);
+
+        if (strlen($displayName) < 3) {
+            $displayName = $username;
+        }
+
         $username = strtolower($username);
+
         // Check for valid email address
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new UserRegistrationException("Email Invalid : \"{$email}\"");
@@ -89,10 +100,6 @@ class UserService
             throw new UserRegistrationException("Password Too Short : \"{$password}\"");
         }
 
-        if (strlen($displayName) < 3) {
-            $displayName = $username;
-        }
-
         
         
         $user = new User();
@@ -108,21 +115,27 @@ class UserService
 
     public function logoutUser()
     {
-        session_destroy();
+        $this->sessionService->destroy();
     }
 
+    /**
+     * @param string $userString
+     * @param string $password
+     * @return false|User
+     * @throws UserLoginException
+     * @throws \Thru\ActiveRecord\Exception
+     */
     public function loginUser(string $userString, string $password)
     {
         $user = User::search()->where("name", $userString)->execOne();
         if (!$user instanceof User) {
             $user = User::search()->where("email", $userString)->execOne();
             if (!$user instanceof User) {
-                return false;
+                throw new UserLoginException("No user found with username/email : \"{$userString}\"");
             }
         }
         if (password_verify($password, $user->pass)) {
-            $_SESSION["user"] = $user;
-            return true;
+            return $this->sessionService->setUser($user);
         } else {
             return false;
         }

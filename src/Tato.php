@@ -11,6 +11,7 @@ use Tato\Controllers\UserController;
 use Tato\Extensions\TwigMarkdownExtension;
 use Tato\Services\CommentService;
 use Tato\Services\PostService;
+use Tato\Services\SessionService;
 use Tato\Services\UserService;
 use Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware;
 
@@ -27,11 +28,11 @@ class Tato
 
     public function __construct()
     {
-        $this->setupSession();
         $this->setupSlim();
         $this->setupTwig();
         $this->setupDependencies();
         $this->setRoots();
+        $this->setupSession();
     }
 
     /**
@@ -44,7 +45,10 @@ class Tato
 
     public function setupSession()
     {
-        session_start();
+        $sessionService = $this->container->get(SessionService::class);
+        if ($sessionService instanceof SessionService) {
+            $sessionService->start();
+        }
     }
 
     protected function setupSlim()
@@ -90,14 +94,23 @@ class Tato
                 $container->get(CommentService::class)
             );
         };
+        $this->container[SessionService::class] = function (\Slim\Container $container) {
+            return new SessionService();
+        };
         $this->container[PostService::class] = function (\Slim\Container $container) {
-            return new PostService();
+            return new PostService(
+                $container->get(SessionService::class)
+            );
         };
         $this->container[CommentService::class] = function (\Slim\Container $container) {
-            return new CommentService();
+            return new CommentService(
+                $container->get(SessionService::class)
+            );
         };
         $this->container[UserService::class] = function (\Slim\Container $container) {
-            return new UserService();
+            return new UserService(
+                $container->get(SessionService::class)
+            );
         };
     }
 

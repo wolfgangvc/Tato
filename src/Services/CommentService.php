@@ -6,8 +6,9 @@ use Tato\Models\User;
 
 class CommentService
 {
-    public function __construct()
+    public function __construct(SessionService $sessionService)
     {
+        $this->sessionService = $sessionService;
     }
 
     public function getByID(int $id)
@@ -55,15 +56,13 @@ class CommentService
     {
         $comment = Comment::search()->where("comment_id", $comment_id)->execOne();
         if ($comment instanceof Comment) {
-            if (isset($_SESSION["user"])) {
-                $sUser = $_SESSION["user"];
-                if ($sUser instanceof User) {
-                    if ($comment->user_id == $sUser->user_id) {
-                        $comment->title = $title;
-                        $comment->body = $body;
-                        $comment->save();
-                        return $comment;
-                    }
+            $sUser = $this->sessionService->getUser();
+            if ($sUser) {
+                if ($comment->user_id == $sUser->user_id) {
+                    $comment->title = $title;
+                    $comment->body = $body;
+                    $comment->save();
+                    return $comment;
                 }
             }
         }
@@ -73,17 +72,15 @@ class CommentService
     public function newComment(int $post_id, string $title, string $body)
     {
         if ($post_id > 0) { //TODO : replace with check if post exists (give this class access to the postervice)
-            if (isset($_SESSION["user"])) {
-                $sUser = $_SESSION["user"];
-                if ($sUser instanceof User) {
-                    $comment = new Comment();
-                    $comment->post_id = $post_id;
-                    $comment->user_id = $sUser->user_id;
-                    $comment->title = $title;
-                    $comment->body = $body;
-                    $comment->save();
-                    return $comment;
-                }
+                $sUser = $this->sessionService->getUser();
+            if ($sUser) {
+                $comment = new Comment();
+                $comment->post_id = $post_id;
+                $comment->user_id = $sUser->user_id;
+                $comment->title = $title;
+                $comment->body = $body;
+                $comment->save();
+                return $comment;
             }
         }
         return false;

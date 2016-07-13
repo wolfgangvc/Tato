@@ -9,8 +9,12 @@ use Tato\Models\User;
 
 class PostService
 {
-    public function __construct()
+    /** @var SessionService */
+    protected $sessionService;
+
+    public function __construct($sessionService)
     {
+        $this->sessionService = $sessionService;
     }
 
     public function getByID(int $id, $allowDeleted = false)
@@ -94,20 +98,26 @@ class PostService
         if ($post_id > 0) {
             $post = $this->getByID($post_id);
             if ($post instanceof Post) {
-                $change = false;
-                if (strlen($title) > 2) {
-                    $post->title = $title;
-                    $change = true;
+                $sUser = $this->sessionService->getUser();
+                if ($sUser) {
+                    if ($post->user_id != $sUser->user_id) {
+                        throw new EditPostException("User ID does not match post");
+                    }
+                    $change = false;
+                    if (strlen($title) > 2) {
+                        $post->title = $title;
+                        $change = true;
+                    }
+                    if (strlen($body) > 2) {
+                        $post->title = $body;
+                        $change = true;
+                    }
+                    if (!$change) {
+                        throw new EditPostException("Title or Body invalid");
+                    }
+                    $post->save();
+                    return $post;
                 }
-                if (strlen($body) > 2) {
-                    $post->title = $body;
-                    $change = true;
-                }
-                if (!$change) {
-                    throw new EditPostException("Title or Body invalid");
-                }
-                $post->save();
-                return $post;
             }
             throw new EditPostException("No post found with id : \"{$post_id}\"");
         }
@@ -128,16 +138,14 @@ class PostService
         if (strlen($body) < 3) {
             throw new NewPostException("Post body too short : \"{$title}\"");
         }
-        if (isset($_SESSION["user"])) {
-            $sUser = $_SESSION["user"];
-            if ($sUser instanceof User) {
-                $post = new Post();
-                $post->user_id = $sUser->user_id;
-                $post->title = $title;
-                $post->body = $body;
-                $post->save();
-                return $post;
-            }
+        $sUser = $this->sessionService->getUser();
+        if ($sUser) {
+            $post = new Post();
+            $post->user_id = $sUser->user_id;
+            $post->title = $title;
+            $post->body = $body;
+            $post->save();
+            return $post;
         }
         throw new NewPostException("No valid user session for new post.");
     }
