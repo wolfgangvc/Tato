@@ -22,8 +22,13 @@ class UserController
 
     protected $error;
 
-    public function __construct(Twig $twig, UserService $userService, PostService $postService, CommentService $commentService)
-    {
+    public function __construct(
+        Twig $twig,
+        UserService $userService,
+        PostService $postService,
+        CommentService $commentService
+    ) {
+    
         $this->twig = $twig;
         $this->userService = $userService;
         $this->postService = $postService;
