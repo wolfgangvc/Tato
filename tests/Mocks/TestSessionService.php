@@ -1,6 +1,6 @@
 <?php
 
-namespace Tato\Services;
+namespace Tato\Test\Mocks;
 
 use Tato\Models\User;
 

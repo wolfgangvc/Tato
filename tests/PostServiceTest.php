@@ -4,9 +4,9 @@ namespace Tato\Test;
 
 use Tato\Models\User;
 use Tato\Services\PostService;
-use Tato\Services\TestSessionService;
 use Tato\Models\Post;
 use Tato\Services\UserService;
+use Tato\Test\Mocks\TestSessionService;
 use Thru\ActiveRecord\SearchIndex;
 
 class PostServiceTest extends BaseTest
@@ -276,11 +276,11 @@ class PostServiceTest extends BaseTest
      * @expectedException \Tato\Exceptions\DeletePostException
      * @expectedExceptionMessage User Not Valid :
      */
-    public function testPostServiceDeletePostLogicalInvalidUser(PostServiceTestData $data)
+    public function testPostServiceDeletePostByIDLogicalInvalidUser(PostServiceTestData $data)
     {
         $this->userService->loginUser($data->fakeUser2->name, $this->password);
 
-        $this->postService->deletePost($data->postArray[0]->post_id);
+        $this->postService->deletePostByID($data->postArray[0]->post_id);
     }
 
     /**
@@ -288,9 +288,9 @@ class PostServiceTest extends BaseTest
      * @expectedException \Tato\Exceptions\DeletePostException
      * @expectedExceptionMessage No Valid User Session
      */
-    public function testPostServiceDeletePostLogicalNoUser(PostServiceTestData $data)
+    public function testPostServiceDeletePostByIDLogicalNoUser(PostServiceTestData $data)
     {
-        $this->postService->deletePost($data->postArray[0]->post_id);
+        $this->postService->deletePostByID($data->postArray[0]->post_id);
     }
 
     /**
@@ -298,9 +298,9 @@ class PostServiceTest extends BaseTest
      * @expectedException \Tato\Exceptions\DeletePostException
      * @expectedExceptionMessage No post with id :
      */
-    public function testPostServiceDeletePostLogicalDoesntExist(PostServiceTestData $data)
+    public function testPostServiceDeletePostByIDLogicalDoesntExist(PostServiceTestData $data)
     {
-        $this->postService->deletePost(10000);
+        $this->postService->deletePostByID(10000);
     }
 
     /**
@@ -308,19 +308,19 @@ class PostServiceTest extends BaseTest
      * @expectedException \Tato\Exceptions\DeletePostException
      * @expectedExceptionMessage Invalid Post ID :
      */
-    public function testPostServiceDeletePostLogicalInvalidID(PostServiceTestData $data)
+    public function testPostServiceDeletePostByIDLogicalInvalidID(PostServiceTestData $data)
     {
-        $this->postService->deletePost(-1);
+        $this->postService->deletePostByID(-1);
     }
 
     /**
      * @depends testPostServiceGetLatestPost
      */
-    public function testPostServiceDeletePostLogical(PostServiceTestData $data)
+    public function testPostServiceDeletePostByIDLogical(PostServiceTestData $data)
     {
         $this->userService->loginUser($data->fakeUser1->name, $this->password);
 
-        $this->postService->deletePost($data->postArray[0]->post_id);
+        $this->postService->deletePostByID($data->postArray[0]->post_id);
 
         /** @var $post Post */
         $post = Post::search()->where("post_id", $data->postArray[0]->post_id)->execOne();
@@ -333,19 +333,19 @@ class PostServiceTest extends BaseTest
     /**
      * @depends testPostServiceGetLatestPost
      */
-    public function testPostServiceDeletePost(PostServiceTestData $data)
+    public function testPostServiceDeletePostByID(PostServiceTestData $data)
     {
         $this->userService->loginUser($data->fakeUser1->name, $this->password);
 
-        $this->postService->deletePost($data->postArray[0]->post_id, false);
+        $this->postService->deletePostByID($data->postArray[0]->post_id, false);
 
         return $data;
     }
 
     /**
-     * @depends testPostServiceDeletePost
+     * @depends testPostServiceDeletePostByID
      */
-    public function testPostServiceDeletePostCache(PostServiceTestData $data)
+    public function testPostServiceDeletePostByIDCache(PostServiceTestData $data)
     {
         // Fix for bug in Active Record See : https://github.com/Thruio/ActiveRecord/pull/26
         SearchIndex::getInstance()->wipe();

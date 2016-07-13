@@ -104,7 +104,8 @@ class Tato
         };
         $this->container[CommentService::class] = function (\Slim\Container $container) {
             return new CommentService(
-                $container->get(SessionService::class)
+                $container->get(SessionService::class),
+                $container->get(PostService::class)
             );
         };
         $this->container[UserService::class] = function (\Slim\Container $container) {

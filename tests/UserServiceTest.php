@@ -2,9 +2,9 @@
 
 namespace Tato\Test;
 
-use Tato\Services\TestSessionService;
 use Tato\Services\UserService;
 use Tato\Models\User;
+use Tato\Test\Mocks\TestSessionService;
 use Thru\ActiveRecord\SearchIndex;
 
 class UserServiceTest extends BaseTest

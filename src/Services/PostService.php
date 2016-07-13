@@ -75,30 +75,35 @@ class PostService
             ->execOne();
     }
 
+    public function deletePost(Post $post, $logicalDelete = true)
+    {
+        $sUser = $this->sessionService->getUser();
+        if ($sUser instanceof User) {
+            if ($sUser->user_id == $post->user_id) {
+                if ($logicalDelete) {
+                    $post->logicalDelete();
+                } else {
+                    $post->delete();
+                }
+                return $post;
+            }
+            throw new DeletePostException("User Not Valid : \"{$sUser->user_id}\"");
+        }
+        throw new DeletePostException("No Valid User Session");
+    }
+
     /**
      * @param int $post_id
      * @param bool $logicalDelete
      * @return Post
      * @throws DeletePostException
      */
-    public function deletePost(int $post_id, $logicalDelete = true)
+    public function deletePostByID(int $post_id, $logicalDelete = true)
     {
         if ($post_id > 0) {
             $post = Post::search()->where("post_id", $post_id)->execOne();
             if ($post instanceof Post) {
-                $sUser = $this->sessionService->getUser();
-                if ($sUser instanceof User) {
-                    if ($sUser->user_id == $post->user_id) {
-                        if ($logicalDelete) {
-                            $post->logicalDelete();
-                        } else {
-                            $post->delete();
-                        }
-                        return $post;
-                    }
-                    throw new DeletePostException("User Not Valid : \"{$sUser->user_id}\"");
-                }
-                throw new DeletePostException("No Valid User Session");
+                return $this->deletePost($post, $logicalDelete);
             }
             throw new DeletePostException("No post with id : \"{$post_id}\"");
         }
