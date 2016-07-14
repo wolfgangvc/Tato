@@ -1,7 +1,6 @@
 <?php
 namespace Tato\Services;
 
-use phpDocumentor\Reflection\Types\Boolean;
 use Tato\Exceptions\DeletePostException;
 use Tato\Exceptions\EditPostException;
 use Tato\Exceptions\NewPostException;
