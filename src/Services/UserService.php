@@ -3,16 +3,21 @@ namespace Tato\Services;
 
 use Tato\Exceptions\UserLoginException;
 use Tato\Exceptions\UserRegistrationException;
+use Tato\Models\Group;
 use Tato\Models\User;
 
 class UserService
 {
     /** @var SessionService  */
     protected $sessionService;
+    /** @var GroupService  */
+    protected $groupService;
 
-    public function __construct($sessionService)
+
+    public function __construct($sessionService, GroupService $groupService)
     {
         $this->sessionService = $sessionService;
+        $this->groupService = $groupService;
     }
 
     public function getByID(int $id, $includeDeleted = false)
@@ -110,7 +115,20 @@ class UserService
         $user->pass = password_hash($password, PASSWORD_DEFAULT);
         $user->save();
 
+        $this->addToDefaultGroups($user);
+
         return $user;
+    }
+
+    protected function addToDefaultGroups(User $user)
+    {
+        $groups = $this->groupService->getDefaultGroups();
+        if (count($groups) > 0) {
+            /** @var $group Group*/
+            foreach ($groups as $group) {
+                $this->groupService->addUserToGroup($user, $group);
+            }
+        }
     }
 
     public function logoutUser()
