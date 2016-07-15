@@ -23,6 +23,7 @@ abstract class BaseModel extends ActiveRecord
     {
         if (!$this->created) {
             $this->created = date("Y-m-d H:i:s");
+            $this->deleted_on = date("Y-m-d H:i:s", 0);
         }
         parent::save($automatic_reload);
     }
