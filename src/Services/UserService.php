@@ -97,7 +97,7 @@ class UserService
 
         // Check that password is longer than 6 chars
         if (strlen($password) < 6) {
-            throw new UserRegistrationException("Password Too Short : \"{$password}\"");
+            throw new UserRegistrationException("Password Too Short : \"Minimum 6 Characters\"");
         }
 
         
@@ -131,13 +131,13 @@ class UserService
         if (!$user instanceof User) {
             $user = User::search()->where("email", $userString)->execOne();
             if (!$user instanceof User) {
-                throw new UserLoginException("No user found with username/email : \"{$userString}\"");
+                throw new UserLoginException("No user matches this Username and Password");
             }
         }
         if (password_verify($password, $user->pass)) {
             return $this->sessionService->setUser($user);
         } else {
-            return false;
+            throw new UserLoginException("No user matches this Username and Password");
         }
     }
 }

@@ -1,6 +1,8 @@
 {% block content %}
+    {% if post %}
     <h2><a href="/post/{{ post.post_id }}">{{ post.title }}</a></h2>
-    <div markdown="1">{{ post.body|markdownExtra|raw }}</div>
+    <div>{{ post.body|markdownExtra|raw }}</div>
     <p hidden>{{ post.body }}</p>
     <p>Created by <a href="/user/{{ post.getUser().name }}">{{ post.getUser().display_name }}</a> at {{ post.created }}</p>
+    {% endif %}
 {% endblock %}

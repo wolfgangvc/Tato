@@ -4,7 +4,10 @@
             <a class="navbar-link" href="/user/dashboard">{{ user.display_name }}</a>
         </li>
         <li>
-            <a class="btn btn-primary" href="/user/logout">Logout</a>
+            <form class="navbar-form navbar-right" action="/user/logout" method="POST">
+                <input type="hidden" name="redirect" value="{{ uri.path }}{% if uri.query %}?{{ uri.query }}{% endif %}">
+                <button type="submit" class="btn btn-primary">Sign out</button>
+            </form>
         </li>
     </ul>
 {% else %}
