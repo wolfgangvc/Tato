@@ -17,12 +17,16 @@ class TwigMarkdownExtension extends \Twig_Extension
 
     public function markdown($markup)
     {
-        return Markdown::defaultTransform($markup);
+        $parser = new Markdown();
+        $parser->no_markup = true;
+        return $parser->transform($markup);
     }
 
     public function markdownExtra($markup)
     {
-        return MarkdownExtra::defaultTransform($markup);
+        $parser = new MarkdownExtra();
+        $parser->no_markup = true;
+        return $parser->transform($markup);
     }
 
     public function getName()
