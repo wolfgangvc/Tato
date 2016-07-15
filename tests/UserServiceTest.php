@@ -35,7 +35,7 @@ class UserServiceTest extends BaseTest
 
     /**
      * @expectedException \Tato\Exceptions\UserLoginException
-     * @expectedExceptionMessage No user found with username/email :
+     * @expectedExceptionMessage No user matches this Username and Password
      */
     public function testUserServiceLoginNotRegisteredUsername()
     {
@@ -48,7 +48,7 @@ class UserServiceTest extends BaseTest
 
     /**
      * @expectedException \Tato\Exceptions\UserLoginException
-     * @expectedExceptionMessage No user found with username/email :
+     * @expectedExceptionMessage No user matches this Username and Password
      */
     public function testUserServiceLoginNotRegisteredEmail()
     {
@@ -156,11 +156,12 @@ class UserServiceTest extends BaseTest
 
     /**
      * @depends testUserServiceNewUser
+     * @expectedException \Tato\Exceptions\UserLoginException
+     * @expectedExceptionMessage No user matches this Username and Password
      */
     public function testUserServiceLoginInvalidPassword(User $testUser)
     {
-        $this->assertFalse($this->userService->loginUser($testUser->name, "passwd"));
-        return $testUser;
+        $this->userService->loginUser($testUser->name, "passwd");
     }
 
     /**
