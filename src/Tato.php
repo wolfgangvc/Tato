@@ -6,6 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Tato\Controllers\CommentController;
 use Tato\Controllers\HomeController;
+use Tato\Controllers\PageController;
 use Tato\Controllers\PostController;
 use Tato\Controllers\UserController;
 use Tato\Extensions\TwigMarkdownExtension;
@@ -33,6 +34,7 @@ class Tato
         $this->setupDependencies();
         $this->setRoots();
         $this->setupSession();
+        $this->setupGlobals();
     }
 
     /**
@@ -41,6 +43,17 @@ class Tato
     public function getContainer()
     {
         return $this->container;
+    }
+
+    public function setupGlobals()
+    {
+        /** @var \Slim\Views\Twig $view */
+        $view = $this->container->get("view");
+        /** @var \Slim\Http\Request $request */
+        $request = $this->container->get('request');
+        $uri = $request->getUri();
+        $view->getEnvironment()
+            ->addGlobal("uri", $uri);
     }
 
     public function setupSession()
@@ -89,6 +102,7 @@ class Tato
         $this->container[UserController::class] = function (\Slim\Container $container) {
             return new UserController(
                 $container->get("view"),
+                $container->get(SessionService::class),
                 $container->get(UserService::class),
                 $container->get(PostService::class),
                 $container->get(CommentService::class)
@@ -150,6 +164,7 @@ class Tato
 
     protected function setRoots()
     {
+
         $this->slim->get("/hello/{name}", function (Request $request, Response $response, $args) {
             $response->write("Hello " . $args['name']);
             return $response;
@@ -183,12 +198,13 @@ class Tato
         $this->slim->group("/user", function () {
             $this->get("/login", UserController::class . ":showLogin");
             $this->post("/login", UserController::class . ":doLogin");
-            $this->get("/logout", UserController::class . ":doLogout");
+            $this->post("/logout", UserController::class . ":doLogout");
             $this->get("/register", UserController::class . ":showRegister");
             $this->post("/register", UserController::class . ":doRegister");
             $this->get("/dashboard", UserController::class . ":showDashboard");
             $this->get("/{id}", UserController::class . ":showUserPage");
         });
+        $this->slim->get("/{page}", PageController::class . ":showPage");
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');
         $this->slim->post("/posts/new",PostController::class . ':doNewPost');
