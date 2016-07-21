@@ -114,12 +114,13 @@ class Tato
                 $container->get(CommentService::class)
             );
         };
+        /*
         $this->container[PageController::class] = function (\Slim\Container $container) {
             return new PageController(
                 $this->container->get("view"),
                 $this->container->get(PageService::class)
             );
-        };
+        };*/
         $this->container[SessionService::class] = function (\Slim\Container $container) {
             return new SessionService();
         };
@@ -139,11 +140,12 @@ class Tato
                 $container->get(SessionService::class)
             );
         };
+        /*
         $this->container[PageService::class] = function (\Slim\Container $container) {
             return new PageService(
                 $container->get(SessionService::class)
             );
-        };
+        };*/
     }
 
     protected function setupTwig()
@@ -186,7 +188,7 @@ class Tato
             $response->write("Hello " . $args['name']);
             return $response;
         });
-        //$this->slim->get("/", HomeController::class . ':showHomePage');
+        $this->slim->get("/", HomeController::class . ':showHomePage');
         $this->slim->get("/posts/{page}", PostController::class . ":showPosts");
         $this->slim->group("/post", function () {
             $this->get("/new", PostController::class . ':showNewPost');
@@ -221,7 +223,7 @@ class Tato
             $this->get("/dashboard", UserController::class . ":showDashboard");
             $this->get("/{id}", UserController::class . ":showUserPage");
         });
-        $this->slim->get("/[{page:.*}]", PageController::class . ":showPage");
+        //$this->slim->get("/[{page:.*}]", PageController::class . ":showPage");
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');
         $this->slim->post("/posts/new",PostController::class . ':doNewPost');
