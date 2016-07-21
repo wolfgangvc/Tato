@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "da425b3425319087a59586be1bbcb39a",
-    "content-hash": "9045411672fbeea1daeed0f6015abad9",
+    "hash": "7db6ca5f12718acc39a3390a24749ed6",
+    "content-hash": "4d0643fc6f5b7c68aaa9a1b07fa85fe9",
     "packages": [
         {
             "name": "components/font-awesome",
@@ -619,6 +619,39 @@
             ],
             "description": "A simple, well-tested JSON pretty printer and related stuff",
             "time": "2015-02-18 10:41:12"
+        },
+        {
+            "name": "thru.io/session",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Thruio/Session.git",
+                "reference": "7ea740cc9ddeb8e616b379abc521d24a13c6aef3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Thruio/Session/zipball/7ea740cc9ddeb8e616b379abc521d24a13c6aef3",
+                "reference": "7ea740cc9ddeb8e616b379abc521d24a13c6aef3",
+                "shasum": ""
+            },
+            "require": {
+                "thru.io/active_record": ">=0.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Thru\\Session\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Matthew Baggett",
+                    "email": "matthew@baggett.me"
+                }
+            ],
+            "description": "Sessions handler",
+            "time": "2015-06-23 10:50:25"
         },
         {
             "name": "thru.io/uuid",

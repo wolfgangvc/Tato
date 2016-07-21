@@ -2,16 +2,20 @@
 namespace Tato\Services;
 
 use Tato\Models\User;
+use Thru\Session\Session;
 
 class SessionService
 {
+    /** @var Session */
+    protected $session;
+
     public function __construct()
     {
     }
 
     public function start()
     {
-        session_start();
+        $this->session = new Session();
     }
 
     public function destroy()
