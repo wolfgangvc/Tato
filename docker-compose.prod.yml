@@ -1,0 +1,17 @@
+mysql:
+  environment: 
+    - MYSQL_ROOT_PASSWORD=0Z0mQ130F65E8wD
+    - MYSQL_USER=tatouser
+    - MYSQL_PASSWORD=5zkfAr9Y8k6qosP
+    - MYSQL_DATABASE=tatodbs
+  image: mysql
+
+phpmyadmin:
+  image: "corbinu/docker-phpmyadmin:latest"
+  links: 
+    - mysql
+
+tato: 
+  image: "wolfgangvc/tato"
+  links: 
+    - mysql

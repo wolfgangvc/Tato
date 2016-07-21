@@ -56,13 +56,14 @@
     {% block sidenav %}{% endblock %}
 </div>
 <div class="container">
+    <h1>{{ page }}</h1>
     {% block content %}<h2>There should be something here!!!!</h2>{% endblock %}
 </div>
 <hr />
 <div hidden><pre>{{ dump() }}</pre></div>
 <div class="container">
     <footer>
-        <p>&copy; 2015 Company, Inc.</p>
+        <p>&copy; {{ this_year }} Wolfgang von Caron. {{ host_name }}</p>
     </footer>
 </div>
 </body>

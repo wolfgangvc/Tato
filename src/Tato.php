@@ -10,7 +10,9 @@ use Tato\Controllers\PageController;
 use Tato\Controllers\PostController;
 use Tato\Controllers\UserController;
 use Tato\Extensions\TwigMarkdownExtension;
+use Tato\Models\Page;
 use Tato\Services\CommentService;
+use Tato\Services\PageService;
 use Tato\Services\PostService;
 use Tato\Services\SessionService;
 use Tato\Services\UserService;
@@ -54,6 +56,10 @@ class Tato
         $uri = $request->getUri();
         $view->getEnvironment()
             ->addGlobal("uri", $uri);
+        $view->getEnvironment()
+            ->addGlobal("this_year", date("Y"));
+        $view->getEnvironment()
+            ->addGlobal("host_name", gethostname());
     }
 
     public function setupSession()
@@ -108,6 +114,12 @@ class Tato
                 $container->get(CommentService::class)
             );
         };
+        $this->container[PageController::class] = function (\Slim\Container $container) {
+            return new PageController(
+                $this->container->get("view"),
+                $this->container->get(PageService::class)
+            );
+        };
         $this->container[SessionService::class] = function (\Slim\Container $container) {
             return new SessionService();
         };
@@ -124,6 +136,11 @@ class Tato
         };
         $this->container[UserService::class] = function (\Slim\Container $container) {
             return new UserService(
+                $container->get(SessionService::class)
+            );
+        };
+        $this->container[PageService::class] = function (\Slim\Container $container) {
+            return new PageService(
                 $container->get(SessionService::class)
             );
         };
@@ -169,7 +186,7 @@ class Tato
             $response->write("Hello " . $args['name']);
             return $response;
         });
-        $this->slim->get("/", HomeController::class . ':showHomePage');
+        //$this->slim->get("/", HomeController::class . ':showHomePage');
         $this->slim->get("/posts/{page}", PostController::class . ":showPosts");
         $this->slim->group("/post", function () {
             $this->get("/new", PostController::class . ':showNewPost');
@@ -204,7 +221,7 @@ class Tato
             $this->get("/dashboard", UserController::class . ":showDashboard");
             $this->get("/{id}", UserController::class . ":showUserPage");
         });
-        $this->slim->get("/{page}", PageController::class . ":showPage");
+        $this->slim->get("/[{page:.*}]", PageController::class . ":showPage");
         /*
         $this->slim->get("/posts/new",PostController::class . ':showNewPost');
         $this->slim->post("/posts/new",PostController::class . ':doNewPost');
